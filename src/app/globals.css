@@ -1,26 +1,223 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff8ee;
+  --foreground: #3b1d12;
+
+  --card: #fffcf7;
+  --card-foreground: #3b1d12;
+
+  --primary: #5a2e1b;
+  --primary-foreground: #fff8ee;
+
+  --secondary: #c58a32;
+  --secondary-foreground: #3b1d12;
+
+  --accent: #e4b85c;
+  --accent-foreground: #3b1d12;
+
+  --muted: #f3e5d2;
+  --muted-foreground: #795548;
+
+  --border: #e5c9a5;
+  --input: #fffdf9;
+  --ring: #c58a32;
+
+  --chocolate: #5a2e1b;
+  --dark-chocolate: #3b1d12;
+  --caramel: #c58a32;
+  --gold: #e4b85c;
+  --cream: #fff8ee;
+  --white: #fffcf7;
+  --danger: #b42318;
+}
+
+.dark {
+  --background: #24130d;
+  --foreground: #fff3df;
+
+  --card: #321a10;
+  --card-foreground: #fff3df;
+
+  --primary: #e4b85c;
+  --primary-foreground: #3b1d12;
+
+  --secondary: #c58a32;
+  --secondary-foreground: #fff8ee;
+
+  --accent: #e8c46d;
+  --accent-foreground: #3b1d12;
+
+  --muted: #43261a;
+  --muted-foreground: #d7b995;
+
+  --border: #68432c;
+  --input: #321a10;
+  --ring: #e4b85c;
+
+  --chocolate: #fff3df;
+  --dark-chocolate: #24130d;
+  --caramel: #c58a32;
+  --gold: #e4b85c;
+  --cream: #fff3df;
+  --white: #321a10;
+  --danger: #ff8a7a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chocolate: var(--chocolate);
+  --color-dark-chocolate: var(--dark-chocolate);
+  --color-caramel: var(--caramel);
+  --color-gold: var(--gold);
+  --color-cream: var(--cream);
+  --color-white: var(--white);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-overlay-in {
+  animation: overlay-in 0.28s ease both;
+}
+
+.animate-sheet-in {
+  animation: sheet-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes shine-sweep {
+  from {
+    transform: translateX(-130%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(180%) skewX(-18deg);
+  }
+}
+
+.shine-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.shine-card::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    color-mix(in srgb, var(--gold) 42%, transparent) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%) skewX(-18deg);
+  opacity: 0;
+}
+
+.shine-card:hover::after {
+  opacity: 1;
+  animation: shine-sweep 0.85s ease;
+}
+
+.shine-sweep {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 243, 223, 0.45) 50%,
+    transparent 70%
+  );
+  animation: shine-sweep 1.15s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-overlay-in,
+  .animate-sheet-in,
+  .animate-pop-in,
+  .shine-card:hover::after,
+  .shine-sweep {
+    animation: none;
+  }
 }
