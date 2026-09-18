@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
@@ -16,7 +17,9 @@ export default function LoginPage() {
         </>
       }
     >
-      <LoginForm />
+      <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
+        <LoginForm />
+      </Suspense>
     </AuthShell>
   );
 }

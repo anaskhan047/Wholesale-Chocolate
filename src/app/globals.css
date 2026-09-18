@@ -211,6 +211,27 @@ body {
   animation: shine-sweep 1.15s ease-in-out infinite;
 }
 
+.category-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-behavior: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--caramel) 45%, transparent) transparent;
+}
+
+.category-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.category-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--caramel) 45%, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-overlay-in,

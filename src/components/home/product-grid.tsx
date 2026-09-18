@@ -1,7 +1,9 @@
 "use client";
 
-import type { RefObject } from "react";
+import { useState, type RefObject } from "react";
 import { motion } from "motion/react";
+import { AddToCartControl } from "@/components/cart/add-to-cart-control";
+import { ProductDetailModal } from "@/components/home/product-detail-modal";
 import { OutOfStockBadge, ProductFacts } from "@/components/product-facts";
 import { isOutOfStock } from "@/lib/product-display";
 import { fadeUpItem, staggerContainer } from "@/lib/motion";
@@ -26,6 +28,8 @@ export function ProductGrid({
   error,
   sentinelRef,
 }: ProductGridProps) {
+  const [selected, setSelected] = useState<ProductItem | null>(null);
+
   return (
     <section id="products" className="mt-8 scroll-mt-24 sm:mt-12">
       <div className="mb-4 flex items-end justify-between gap-3">
@@ -51,34 +55,41 @@ export function ProductGrid({
           variants={staggerContainer}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-2 items-stretch gap-2.5 sm:gap-4 md:grid-cols-3 xl:grid-cols-4"
         >
           {products.map((product) => (
             <motion.article
               key={product.id}
               variants={fadeUpItem}
-              whileHover={{ y: -4 }}
-              className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:border-gold/80 hover:shadow-[0_10px_28px_rgba(90,46,27,0.14)]"
+              whileHover={{ y: -3 }}
+              className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:border-gold/80 hover:shadow-[0_10px_28px_rgba(90,46,27,0.14)]"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                />
-                {isOutOfStock(product.quantity) ? <OutOfStockBadge /> : null}
-              </div>
-              <div className="flex flex-1 flex-col gap-1 p-2.5 sm:p-3.5">
-                <p className="truncate text-[11px] font-medium uppercase tracking-wide text-caramel sm:text-xs">
-                  {product.categoryName}
-                </p>
-                <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:text-base">
-                  {product.name}
-                </h3>
-                <div className="mt-auto pt-1">
-                  <ProductFacts product={product} />
+              <button
+                type="button"
+                onClick={() => setSelected(product)}
+                className="flex min-h-0 min-w-0 flex-1 flex-col text-left"
+              >
+                <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-muted">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                  {isOutOfStock(product.quantity) ? <OutOfStockBadge /> : null}
                 </div>
+                <div className="flex flex-1 flex-col px-2.5 pt-2 sm:px-3.5 sm:pt-3">
+                  <p className="truncate text-[10px] font-medium uppercase tracking-wide text-caramel sm:text-[11px]">
+                    {product.categoryName}
+                  </p>
+                  <h3 className="mt-0.5 line-clamp-2 min-h-[2.4rem] text-[13px] font-semibold leading-snug text-foreground sm:min-h-[2.6rem] sm:text-sm">
+                    {product.name}
+                  </h3>
+                  <ProductFacts product={product} variant="card" />
+                </div>
+              </button>
+              <div className="mt-auto px-2.5 pb-2.5 pt-1 sm:px-3.5 sm:pb-3.5">
+                <AddToCartControl product={product} size="sm" />
               </div>
             </motion.article>
           ))}
@@ -99,6 +110,13 @@ export function ProductGrid({
         <p className="mt-5 text-center text-xs text-muted-foreground">
           All products loaded
         </p>
+      ) : null}
+
+      {selected ? (
+        <ProductDetailModal
+          product={selected}
+          onClose={() => setSelected(null)}
+        />
       ) : null}
     </section>
   );

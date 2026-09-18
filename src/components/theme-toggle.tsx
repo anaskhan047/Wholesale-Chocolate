@@ -5,19 +5,27 @@ import { Moon, Sun } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/cn";
 import { springSoft } from "@/lib/motion";
+import { THEME_COOKIE, type ThemeMode } from "@/lib/theme";
 
-function applyTheme(theme: "light" | "dark") {
+function applyTheme(theme: ThemeMode) {
   document.documentElement.classList.toggle("dark", theme === "dark");
   localStorage.setItem("theme", theme);
+  document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=31536000; samesite=lax`;
 }
 
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+type ThemeToggleProps = {
+  initialTheme?: ThemeMode;
+};
+
+export function ThemeToggle({ initialTheme = "light" }: ThemeToggleProps) {
+  const [theme, setTheme] = useState<ThemeMode>(initialTheme);
 
   useEffect(() => {
-    setTheme(
-      document.documentElement.classList.contains("dark") ? "dark" : "light",
-    );
+    const stored = localStorage.getItem("theme");
+    if (stored === "dark" || stored === "light") {
+      setTheme(stored);
+      applyTheme(stored);
+    }
   }, []);
 
   const next = theme === "dark" ? "light" : "dark";

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CartIconButton } from "@/components/cart/cart-icon";
 import { CategoryNavLink } from "@/components/store/category-nav-link";
 import { HeaderSearch } from "@/components/store/header-search";
 import { useHash } from "@/components/store/use-hash";
@@ -95,6 +96,7 @@ export function SiteHeader({ session }: SiteHeaderProps) {
           <Suspense fallback={<SearchFallback />}>
             <HeaderSearch />
           </Suspense>
+          <CartIconButton />
           <ThemeToggle />
         </div>
       </div>

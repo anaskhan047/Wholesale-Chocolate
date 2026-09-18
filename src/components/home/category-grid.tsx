@@ -18,20 +18,23 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   return (
     <section id="categories" className="scroll-mt-24">
-      <div className="mb-3 flex items-end justify-between gap-2">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-caramel">
-            Categories
-          </p>
-          <h2 className="text-base font-semibold sm:text-xl">Shop by cocoa</h2>
-        </div>
+      <div className="mb-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-caramel">
+          Categories
+        </p>
+        <h2 className="mt-1 text-lg font-semibold tracking-tight sm:text-xl">
+          Select the category
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Tap a category to filter products
+        </p>
       </div>
 
       <motion.div
         variants={staggerContainer}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-3 gap-1.5 sm:gap-3 lg:grid-cols-5"
+        className="category-scroll -mx-2 flex gap-3 overflow-x-auto px-2 pb-2 sm:-mx-0 sm:gap-4 sm:px-0 lg:flex-wrap lg:overflow-visible"
       >
         {categories.map((category) => {
           const active = activeId === category.id;
@@ -40,28 +43,37 @@ export function CategoryGrid({
               key={category.id}
               type="button"
               variants={fadeUpItem}
-              whileHover={{ y: -4 }}
-              whileTap={{ scale: 0.97 }}
+              whileTap={{ scale: 0.96 }}
               onClick={() => onSelect(active ? "" : category.id)}
               className={cn(
-                "shine-card group min-w-0 overflow-hidden rounded-xl border bg-card text-left shadow-sm transition sm:rounded-2xl",
-                active
-                  ? "border-gold shadow-[0_0_18px_rgba(228,184,92,0.28)]"
-                  : "border-border hover:border-gold/70",
+                "group flex w-[4.75rem] shrink-0 flex-col items-center gap-2 sm:w-24",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               )}
+              aria-pressed={active}
             >
-              <div className="relative aspect-square overflow-hidden bg-muted">
+              <span
+                className={cn(
+                  "relative block size-[4.75rem] overflow-hidden rounded-full bg-muted ring-2 transition duration-300 sm:size-24",
+                  active
+                    ? "ring-gold shadow-[0_0_0_3px_color-mix(in_srgb,var(--gold)_35%,transparent)]"
+                    : "ring-border group-hover:ring-gold/70",
+                )}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={category.imageUrl}
-                  alt={category.name}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  alt=""
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-dark-chocolate/55 to-transparent" />
-              </div>
-              <p className="line-clamp-2 min-h-8 px-1 py-1.5 text-center text-[12px] font-semibold leading-tight sm:min-h-0 sm:px-2 sm:py-2.5 sm:text-sm">
+              </span>
+              <span
+                className={cn(
+                  "line-clamp-2 w-full text-center text-[11px] font-semibold leading-tight sm:text-sm",
+                  active ? "text-caramel" : "text-foreground",
+                )}
+              >
                 {category.name}
-              </p>
+              </span>
             </motion.button>
           );
         })}

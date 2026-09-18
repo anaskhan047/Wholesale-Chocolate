@@ -1,16 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/use-auth";
+import { clearGuestCart, readGuestCart } from "@/lib/cart";
+import { postJson } from "@/lib/client/api";
+import type { CartLine } from "@/types/cart";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const login = useLogin();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const nextPath = searchParams.get("next") || "/";
 
   return (
     <form
@@ -19,8 +24,19 @@ export function LoginForm() {
         login.mutate(
           { id, password },
           {
-            onSuccess: (user) => {
-              router.push(user.role === "admin" ? "/admin" : "/");
+            onSuccess: async (user) => {
+              if (user.role === "user") {
+                const guest = readGuestCart();
+                if (guest.length > 0) {
+                  try {
+                    await postJson<CartLine[]>("/api/cart", { items: guest });
+                    clearGuestCart();
+                  } catch {
+                    // CartProvider will retry merge on next store page.
+                  }
+                }
+              }
+              router.push(user.role === "admin" ? "/admin" : nextPath);
               router.refresh();
             },
           },

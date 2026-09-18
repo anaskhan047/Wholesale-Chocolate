@@ -5,7 +5,7 @@ import type { ProductItem } from "@/types/product";
 
 type ProductFactsProps = {
   product: ProductItem;
-  variant?: "store" | "admin";
+  variant?: "store" | "admin" | "card";
 };
 
 export function OutOfStockBadge() {
@@ -23,6 +23,26 @@ export function ProductFacts({
   const out = isOutOfStock(product.quantity);
   const showPiece = hasOptionalAmount(product.piecePrice);
   const showPack = hasOptionalAmount(product.packetPieceQty);
+
+  if (variant === "card") {
+    return (
+      <div className="mt-auto min-h-[3.4rem]">
+        <p className="text-sm font-bold leading-tight text-chocolate sm:text-base">
+          {formatPrice(product.sellPrice)}
+        </p>
+        <p className="mt-0.5 min-h-[1rem] text-[10px] leading-tight text-muted-foreground sm:text-[11px]">
+          {showPiece ? `Per piece ${formatPrice(product.piecePrice)}` : "\u00A0"}
+        </p>
+        <p className="min-h-[1rem] text-[10px] leading-tight text-muted-foreground sm:text-[11px]">
+          {out
+            ? "Out of stock"
+            : showPack
+              ? `${product.packetPieceQty} pcs / packet`
+              : "\u00A0"}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-0.5">

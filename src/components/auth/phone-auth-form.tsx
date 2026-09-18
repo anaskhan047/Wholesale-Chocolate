@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSignup } from "@/hooks/use-auth";
+import { clearGuestCart, readGuestCart } from "@/lib/cart";
+import { postJson } from "@/lib/client/api";
+import type { CartLine } from "@/types/cart";
 
 export function PhoneAuthForm() {
   const router = useRouter();
@@ -19,7 +22,16 @@ export function PhoneAuthForm() {
         signup.mutate(
           { phone, password },
           {
-            onSuccess: () => {
+            onSuccess: async () => {
+              const guest = readGuestCart();
+              if (guest.length > 0) {
+                try {
+                  await postJson<CartLine[]>("/api/cart", { items: guest });
+                  clearGuestCart();
+                } catch {
+                  // CartProvider will retry merge later.
+                }
+              }
               router.push("/");
               router.refresh();
             },

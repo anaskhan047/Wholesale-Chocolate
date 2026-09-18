@@ -39,6 +39,16 @@ export async function postJson<T>(url: string, body?: unknown) {
   return readApi<T>(response);
 }
 
+export async function putJson<T>(url: string, body?: unknown) {
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  return readApi<T>(response);
+}
+
 export async function postForm<T>(url: string, body: FormData) {
   const response = await fetch(url, {
     method: "POST",

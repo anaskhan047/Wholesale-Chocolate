@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ADMIN_NAV, isActiveAdminPath } from "@/components/admin/admin-nav";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { BackLink } from "@/components/store/back-link";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 type AdminShellProps = {
@@ -80,6 +81,7 @@ export function AdminShell({ adminId, children }: AdminShellProps) {
           </div>
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-3 py-4 sm:px-4 sm:py-6">
+          <BackLink href="/admin" label="Back" />
           {children}
         </main>
       </div>
